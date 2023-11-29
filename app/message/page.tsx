@@ -11,25 +11,22 @@ export default function Message() {
   };
 
   const handleSubmit = async () => {
-    const res = await fetch(
-      "https://fju-test3.cognitiveservices.azure.com/language/:query-knowledgebases?projectName=shelly-search-test&api-version=2021-10-01",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Ocp-Apim-Subscription-Key": "fde6fc08d2e14a71b844af69aeea65f7",
-        },
-        body: JSON.stringify({
-          question: message,
-        }),
-      }
-    );
+    const res = await fetch("/api", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        question: message,
+      }),
+    });
     const result = await res.json();
-    const answer = result.answers[0].answer;
+    const answer = result.message.answers[0].answer;
     createQA({
       question: message,
       answer,
     });
+    console.log(answer);
   };
 
   const keyPress = (ev: React.KeyboardEvent<HTMLDivElement>) => {
