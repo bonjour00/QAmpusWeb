@@ -44,6 +44,7 @@ export default function DialogModel({ props }: any) {
           multiline
           value={props.editSelected && props.editSelected.question}
           onChange={InputChange}
+          disabled={props.disabled}
         />
         <TextField
           margin="dense"
@@ -54,7 +55,7 @@ export default function DialogModel({ props }: any) {
           multiline
           value={props.editSelected && props.editSelected.answer}
           onChange={InputChange}
-          disabled
+          disabled={props.disabled}
         />
       </DialogContent>
       <DialogActions>
@@ -71,7 +72,9 @@ export default function DialogModel({ props }: any) {
           <CloseIcon />
         </IconButton>
         <Button onClick={hide}>取消</Button>
-        <Button onClick={updateQAHandler}>{props.title}</Button>
+        <Button onClick={updateQAHandler}>
+          {props.title == "指派" ? "指派" : "修改"}
+        </Button>
       </DialogActions>
     </Dialog>
   );

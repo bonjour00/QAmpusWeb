@@ -3,6 +3,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useState } from "react";
 import PaginationControlled from "./pagination";
 import ToolBar from "./toolBar";
+import CustomNoRowsOverlay from "./noRow";
+// import LinearProgress from "@mui/material/LinearProgress";
 
 export default function Table({ props }: any) {
   const PAGE_SIZE = 3;
@@ -21,7 +23,6 @@ export default function Table({ props }: any) {
     select: props.select,
     setSelect: props.setSelect,
   };
-
   return (
     <DataGrid
       autoHeight
@@ -29,21 +30,25 @@ export default function Table({ props }: any) {
       columns={props.columns.concat(props.actionColumn)}
       disableColumnMenu
       disableRowSelectionOnClick
+      loading={props.loading}
       slots={{
         toolbar: ToolBar,
         pagination: PaginationControlled,
+        noRowsOverlay: CustomNoRowsOverlay,
+        // loadingOverlay: LinearProgress,
       }}
       slotProps={{
         toolbar: {
           search: props.search,
           setSearch: props.setSearch,
           propsOrder,
+          title: props.title,
         },
       }}
+      sx={{ "--DataGrid-overlayHeight": "300px" }}
       pageSizeOptions={[PAGE_SIZE]}
       paginationModel={paginationModel}
       onPaginationModelChange={setPaginationModel}
-      // loading={true}
     />
   );
 }

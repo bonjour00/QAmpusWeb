@@ -17,6 +17,7 @@ import app from "@/app/_firebase/Config";
 import { useEffect, useState } from "react";
 import { QAadd, QA, Office } from "../_settings/interface";
 import { usePathname } from "next/navigation";
+import { fail, successs } from "../_component/Table/ActionBtn/animateAction";
 
 interface SelectState {
   [key: string]: string;
@@ -30,6 +31,7 @@ export default function useQA() {
   const [officeList, setOfficelist] = useState<Office[]>([]);
   const [QaListFilter, setQalistFilter] = useState<QA[]>([]);
   const [updated, setUpdated] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [select, setSelect] = useState<SelectState>({
     順序: "desc",
     指派系所: "",
@@ -39,6 +41,7 @@ export default function useQA() {
 
   useEffect(() => {
     const fetchQA = async () => {
+      setLoading(true);
       const q = query(
         qaRef,
         where("officeId", "==", "GxBe4slDyHU2ETgvJDMF"), //等註冊
@@ -53,9 +56,14 @@ export default function useQA() {
           ...doc.data(),
         }));
         setQalist(list);
+        setLoading(false);
+        // const date = new Date(list[0].qaAskTime.toDate());
+        // date.setDate(date.getDate() + 30);
+        // console.log(date.toString(), "@@@");
+        // console.log(new Date());
       } catch (error) {
-        console.log("hi");
         console.log(error);
+        setLoading(false);
       }
     };
     fetchQA();
@@ -97,8 +105,10 @@ export default function useQA() {
         question: QAadd.question,
         answer: QAadd.answer,
         qaAskTime: serverTimestamp(),
-        qaCheckTime: "",
-        stuNum: "001", //學號
+        qaUpdateTime: "",
+        qaDeleteTime: "",
+        stuNum: "001", //學號(要改auth)
+        lastUpdaterId: "", //最後修改的人(要改auth)
         office: "資管", //目前指派單位
         officeId: "GxBe4slDyHU2ETgvJDMF",
         assignCount: 0,
@@ -108,6 +118,7 @@ export default function useQA() {
       setUpdated((currentValue) => currentValue + 1);
     } catch (error) {
       console.log(error);
+      // setLoading(false);
     }
   };
 
@@ -117,30 +128,62 @@ export default function useQA() {
     const officeCurrent = officeList.filter((x) => x.id === select.指派系所)[0]
       .name;
     try {
+      setLoading(true);
       await updateDoc(doc(db, "QA", QA.qaId), {
         question: QA.question,
         answer: QA.answer,
-        qaCheckTime: QaCanCheck ? serverTimestamp() : "",
+        qaUpdateTime: serverTimestamp(),
+        lastUpdaterId: "update001", //最後修改的人(要改auth)
         office: officeCurrent,
         officeId: select.指派系所,
         assignCount: QaCanCheck ? QA.assignCount : QA.assignCount + 1, //轉介次數
         history: QaCanCheck ? QA.history : [...QA.history, officeCurrent],
         status: QaCanCheck ? "checked" : "pending",
       });
+      successs("修改成功");
       setUpdated((currentValue) => currentValue + 1);
     } catch (error) {
       console.log(error);
+      fail("發生錯誤");
+      setLoading(false);
     }
   };
 
   const deleteQA = async (qaID: string) => {
+    setLoading(true);
     try {
-      await deleteDoc(doc(db, "QA", qaID));
+      await updateDoc(doc(db, "QA", qaID), {
+        lastUpdaterId: "update001",
+        // qaUpdateTime: serverTimestamp(),
+        qaDeleteTime: serverTimestamp(),
+        status: pathname == "recentDel" ? "totalDel" : "recentDel",
+      });
+      successs("刪除成功");
       setUpdated((currentValue) => currentValue + 1);
     } catch (error) {
       console.error(error);
+      fail("發生錯誤");
+      setLoading(false);
     }
   };
+
+  const recoverQA = async (qaID: string) => {
+    setLoading(true);
+    try {
+      await updateDoc(doc(db, "QA", qaID), {
+        lastUpdaterId: "update001",
+        qaUpdateTime: serverTimestamp(),
+        status: "pending",
+      });
+      successs("已復原");
+      setUpdated((currentValue) => currentValue + 1);
+    } catch (error) {
+      console.error(error);
+      fail("發生錯誤");
+      setLoading(false);
+    }
+  };
+
   // console.log("selectOffice", select);
   // console.log("search", search);
 
@@ -171,5 +214,7 @@ export default function useQA() {
     search,
     setSearch,
     officeList,
+    loading,
+    recoverQA,
   ] as const;
 }
