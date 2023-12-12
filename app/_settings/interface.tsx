@@ -12,6 +12,7 @@ export type QA = {
   qaAskTime: Date;
   qaUpdateTime: Date | string;
   qaDeleteTime: Date | string;
+  needAssignTime: Date | boolean;
   stuNum: string; //學號
   lastUpdaterId: string;
   office: string; //目前指派單位
@@ -19,6 +20,8 @@ export type QA = {
   assignCount: number; //轉介次數
   history: string[];
   status: string; //狀態 e.g 是否審核過
+  sendResponse: boolean; //true代表還沒
+  autoDeleteTime: Date | boolean;
 };
 
 //office

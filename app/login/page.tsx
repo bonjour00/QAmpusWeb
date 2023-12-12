@@ -1,8 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signOut,
+  onAuthStateChanged,
+  signInWithPopup,
+  signInWithRedirect,
+} from "firebase/auth";
 import app from "@/app/_firebase/Config";
-import { signInWithPopup } from "firebase/auth";
 import {
   setDoc,
   doc,
@@ -13,23 +19,11 @@ import {
   getFirestore,
 } from "firebase/firestore";
 import { useRouter, usePathname } from "next/navigation";
-import { TextField } from "@mui/material";
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { Button, Card, CardContent, CardMedia, Input } from "@mui/material";
 
-export default function SelectOption({ props }: any) {
+export default function AuthLogin({ props }: any) {
   const auth = getAuth(app);
   const googleProvider = new GoogleAuthProvider();
   const db = getFirestore(app);
-  const storage = getStorage(app);
-  const [file, setFile] = useState<File>();
-  const handleUpload = async function (e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.files !== null) {
-      console.log(e.target.files[0]);
-      setFile(e.target.files[0]);
-    }
-  };
-  const [fileList, setFileList] = useState({ photo: "dog.png" });
   const signInWithGoogle = () => {
     signInWithPopup(auth, googleProvider)
       .then((res) => {
@@ -41,25 +35,16 @@ export default function SelectOption({ props }: any) {
               email: auth?.currentUser?.email,
               url: auth?.currentUser?.photoURL,
               name: auth?.currentUser?.displayName,
-              photo: file?.name ? file?.name : "dog.png",
+              officeId: "user", //預設user
             });
-            if (file) {
-              const imageRef = ref(storage, file?.name);
-              await uploadBytes(imageRef, file);
-            }
           } catch (err) {
             console.error(err);
           }
         };
         const checkHasAccount = async () => {
           const account = await getDoc(usersCollectionRef);
-
           if (!account.exists()) {
-            const data = await getDocs(collection(db, "users"));
             userAdd();
-            const starsRef = ref(storage, file?.name ? file?.name : "dog.png");
-            const photoURL = await getDownloadURL(starsRef);
-            setFileList({ photo: photoURL });
           }
         };
         checkHasAccount();
@@ -68,17 +53,14 @@ export default function SelectOption({ props }: any) {
         console.error(err);
       });
   };
+  const handleLogout = async function () {
+    await signOut(auth);
+  };
+
   return (
     <>
       <button onClick={signInWithGoogle}>login</button>
-      <TextField
-        type="file"
-        inputProps={{ accept: "image/x-png,image/jpeg" }}
-        onChange={handleUpload}
-      />
-      <Card sx={{ maxWidth: "30vw" }}>
-        <CardMedia component="img" image={fileList.photo} />
-      </Card>
+      <button onClick={handleLogout}>Logout</button>
     </>
   );
 }

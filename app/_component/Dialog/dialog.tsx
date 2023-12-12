@@ -57,6 +57,16 @@ export default function DialogModel({ props }: any) {
           onChange={InputChange}
           disabled={props.disabled}
         />
+        {props.assignRecord && (
+          <TextField
+            margin="dense"
+            label="指派紀錄"
+            fullWidth
+            variant="standard"
+            multiline
+            value={props.editSelected && props.editSelected.history.join("->")}
+          />
+        )}
       </DialogContent>
       <DialogActions>
         <SelectOption props={propsSelect} />

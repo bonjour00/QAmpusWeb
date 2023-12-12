@@ -24,31 +24,53 @@ export default function Table({ props }: any) {
     setSelect: props.setSelect,
   };
   return (
-    <DataGrid
-      autoHeight
-      rows={props.rows}
-      columns={props.columns.concat(props.actionColumn)}
-      disableColumnMenu
-      disableRowSelectionOnClick
-      loading={props.loading}
-      slots={{
-        toolbar: ToolBar,
-        pagination: PaginationControlled,
-        noRowsOverlay: CustomNoRowsOverlay,
-        // loadingOverlay: LinearProgress,
+    <div
+      style={{
+        background: "#F7F9FE",
+        padding: "3rem",
+        overflow: "hidden",
+        width: "100%",
       }}
-      slotProps={{
-        toolbar: {
-          search: props.search,
-          setSearch: props.setSearch,
-          propsOrder,
-          title: props.title,
-        },
-      }}
-      sx={{ "--DataGrid-overlayHeight": "300px" }}
-      pageSizeOptions={[PAGE_SIZE]}
-      paginationModel={paginationModel}
-      onPaginationModelChange={setPaginationModel}
-    />
+    >
+      <div
+        className=""
+        style={{
+          background: "#FFFFFF",
+          padding: "1rem",
+          height: "calc(100% - 1rem)",
+          borderRadius: "1rem",
+          boxShadow: "0px 10px 20px #E8E8E8",
+        }}
+      >
+        <div style={{ height: "calc(100% - 5rem)", overflow: "auto" }}>
+          <DataGrid
+            autoHeight
+            rows={props.rows}
+            columns={props.columns.concat(props.actionColumn)}
+            disableColumnMenu
+            disableRowSelectionOnClick
+            loading={props.loading}
+            slots={{
+              toolbar: ToolBar,
+              pagination: PaginationControlled,
+              noRowsOverlay: CustomNoRowsOverlay,
+              // loadingOverlay: LinearProgress,
+            }}
+            slotProps={{
+              toolbar: {
+                search: props.search,
+                setSearch: props.setSearch,
+                propsOrder,
+                title: props.title,
+              },
+            }}
+            sx={{ "--DataGrid-overlayHeight": "300px" }}
+            pageSizeOptions={[PAGE_SIZE]}
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+          />
+        </div>
+      </div>
+    </div>
   );
 }

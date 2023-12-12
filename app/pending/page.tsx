@@ -2,7 +2,7 @@
 import { columns } from "../_component/Table/colums";
 import { useState, useEffect } from "react";
 // import { columns } from "./colums";
-import useQA from "../_hooks/useMessage";
+import useQA from "../_hooks/useQA";
 import { QA } from "@/app/_settings/interface";
 import DialogModel from "../_component/Dialog/dialog";
 import Table from "../_component/Table/table";
