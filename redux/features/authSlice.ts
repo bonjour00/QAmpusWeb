@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import {googleSignIn} from './authThunk'
 
 export interface UserState {
   email: string;
@@ -31,10 +32,20 @@ export const authSlice = createSlice({
           email: "345345",
           url: "345",
           name: "345",
-          officeId: true, //預設false
+          officeId: false, //預設false
         };
       }
     },
+  },extraReducers: (builder) => {
+    builder
+      .addCase(googleSignIn.fulfilled, (state, action) => {
+        // state.cartItems = action.payload?.cartItems || [];
+       console.log(action.payload) 
+      })
+      .addCase(googleSignIn.rejected, (state, action) => {
+        // state.status = "error";
+        // state.error = action.error;
+      });
   },
 });
 
