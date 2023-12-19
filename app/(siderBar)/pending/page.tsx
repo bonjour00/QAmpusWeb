@@ -1,15 +1,15 @@
 "use client";
-import { columns } from "../_component/Table/colums";
+import { columns } from "../../_component/Table/colums";
 import { useState, useEffect } from "react";
 // import { columns } from "./colums";
-import useQA from "../_hooks/useQA";
+import useQA from "../../_hooks/useQA";
 import { QA } from "@/app/_settings/interface";
-import DialogModel from "../_component/Dialog/dialog";
-import Table from "../_component/Table/table";
-import DeleteBtn from "../_component/Table/ActionBtn/deleteBtn";
-import EditBtn from "../_component/Table/ActionBtn/editBtn";
+import DialogModel from "../../_component/Dialog/dialog";
+import Table from "../../_component/Table/table";
+import DeleteBtn from "../../_component/Table/ActionBtn/deleteBtn";
+import EditBtn from "../../_component/Table/ActionBtn/editBtn";
 
-export default function NoAssign({ props }: any) {
+export default function Pending({ props }: any) {
   const [
     rows, //QaListFilter
     createQA,
@@ -59,8 +59,7 @@ export default function NoAssign({ props }: any) {
     setSelect,
     updateQA,
     // title: "指派", //btnName，沒寫預設為修改
-    disabled: true, // disabled: true(不能input),預設false
-    assignRecord: true,
+    // disabled: true,預設false
   };
   const tablePorps = {
     rows,
@@ -70,7 +69,7 @@ export default function NoAssign({ props }: any) {
     setSearch,
     columns,
     actionColumn,
-    title: "待指派問題", //每個不同
+    title: "待審核問題", //每個不同
     loading,
   };
   return (

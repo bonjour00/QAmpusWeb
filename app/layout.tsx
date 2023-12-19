@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Menu from "./menu";
 import Box from "@mui/material/Box";
 import StoreProvider from "@/redux/provider";
-
+import UserPending from "./_component/Dialog/userPending";
+import RootMenu from "./rootMenu";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -22,8 +22,9 @@ export default function RootLayout({
       <html lang="en">
         <body className={inter.className}>
           <Box sx={{ display: "flex" }}>
-            <Menu />
+            <RootMenu />
             {children}
+            <UserPending />
           </Box>
         </body>
       </html>

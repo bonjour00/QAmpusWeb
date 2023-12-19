@@ -1,15 +1,15 @@
 "use client";
-import { columns } from "../_component/Table/colums";
+import { checkCols as columns } from "../../_component/Table/colums";
 import { useState, useEffect } from "react";
 // import { columns } from "./colums";
-import useQA from "../_hooks/useQA";
+import useQA from "../../_hooks/useQA";
 import { QA } from "@/app/_settings/interface";
-import DialogModel from "../_component/Dialog/dialog";
-import Table from "../_component/Table/table";
-import DeleteBtn from "../_component/Table/ActionBtn/deleteBtn";
-import EditBtn from "../_component/Table/ActionBtn/editBtn";
+import DialogModel from "../../_component/Dialog/dialog";
+import Table from "../../_component/Table/table";
+import DeleteBtn from "../../_component/Table/ActionBtn/deleteBtn";
+import EditBtn from "../../_component/Table/ActionBtn/editBtn";
 
-export default function Pending({ props }: any) {
+export default function QA({ props }: any) {
   const [
     rows, //QaListFilter
     createQA,
@@ -69,7 +69,7 @@ export default function Pending({ props }: any) {
     setSearch,
     columns,
     actionColumn,
-    title: "待審核問題", //每個不同
+    title: "已確認問答集", //每個不同
     loading,
   };
   return (

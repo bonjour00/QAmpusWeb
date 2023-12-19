@@ -26,7 +26,7 @@ export default function Table({ props }: any) {
   return (
     <div
       style={{
-        background: "#F7F9FE",
+        background: "",
         padding: "3rem",
         overflow: "hidden",
         width: "100%",

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import TextField from "@mui/material/TextField";
-import useQA from "../_hooks/useQA";
+import useQA from "../../_hooks/useQA";
 import axios from "axios";
 type Message = {
   question: string;

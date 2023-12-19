@@ -18,6 +18,8 @@ import { useEffect, useState, useRef } from "react";
 import { QAadd, QA, Office } from "../_settings/interface";
 import { usePathname } from "next/navigation";
 import { fail, successs } from "../_component/Table/ActionBtn/animateAction";
+import { useAppSelector } from "../../redux/hooks";
+import axios from "axios";
 
 interface SelectState {
   [key: string]: string;
@@ -39,6 +41,7 @@ export default function useQA() {
   const [search, setSearch] = useState("");
   const pathname = usePathname().substring(1);
   const canFetch = useRef(false);
+  const user = useAppSelector((state) => state.auth);
 
   const autoDelete = async (qaID: string) => {
     try {
@@ -72,6 +75,7 @@ export default function useQA() {
     }
 
     const fetchQA = async () => {
+      console.log("fetch");
       setLoading(true);
       const orderByWhat =
         pathname == "checked"
@@ -81,7 +85,7 @@ export default function useQA() {
           : "qaAskTime";
       const q = query(
         qaRef,
-        where("officeId", "==", "GxBe4slDyHU2ETgvJDMF"), //等註冊
+        where("officeId", "==", user?.user?.officeId || ""), //等註冊
         where("status", "==", pathname), //pending or checked...
         orderBy(orderByWhat, select.順序 as OrderByDirection)
       );
@@ -92,6 +96,7 @@ export default function useQA() {
           qaId: doc.id,
           ...doc.data(),
         }));
+        console.log(list);
         if (list.some(Boolean)) {
           switch (pathname) {
             case "pending":
@@ -117,6 +122,8 @@ export default function useQA() {
             default:
               setQalist(list);
           }
+        } else {
+          setQalist(list);
         }
 
         setLoading(false);
@@ -126,15 +133,16 @@ export default function useQA() {
       }
     };
     fetchQA();
-    console.log("fetch");
-  }, [updated, db, select.順序]);
+  }, [updated, db, select.順序, user]);
 
   useEffect(() => {
     setQalistFilter(
       QaList.filter(
         (QA) =>
           QA.question.toLowerCase().includes(search.toLowerCase()) ||
-          QA.stuNum.toLowerCase().includes(search.toLowerCase())
+          QA.stuNum.toLowerCase().includes(search.toLowerCase()) ||
+          QA.lastUpdaterId.toLowerCase().includes(search.toLowerCase()) ||
+          QA.answer.toLowerCase().includes(search.toLowerCase())
       )
     );
   }, [QaList, search]);
@@ -168,14 +176,14 @@ export default function useQA() {
         qaUpdateTime: "",
         qaDeleteTime: "",
         needAssignTime,
-        stuNum: "001", //學號(要改auth)
-        lastUpdaterId: "", //最後修改的人(要改auth)
+        stuNum: user.user.uid, //學號(要改auth)
+        lastUpdaterId: "",
         office: "資管", //目前指派單位
         officeId: "GxBe4slDyHU2ETgvJDMF",
         assignCount: 1,
         history: ["資管"],
         status: "pending", //狀態 e.g 是否審核過
-        sendResponse: true, //當check時給使用者回信過嗎(只要回一次)
+        sendResponse: 0, //預設0 當officeId相等確認時為0 代表第一次發
         autoDeleteTime: false,
       });
       setUpdated((currentValue) => currentValue + 1);
@@ -190,12 +198,19 @@ export default function useQA() {
       QA.status == "noAssign" ? false : QA.officeId === select.指派系所;
     const officeCurrent = officeList.filter((x) => x.id === select.指派系所)[0]
       .name;
-    const sendResponse =
-      QA.status == "noAssign"
-        ? true
-        : QaCanCheck && QA.sendResponse
-        ? false
-        : true; //在此發信(!assignCount > 3 = true發)
+    let sendResponse = QA.sendResponse;
+    if (QaCanCheck && QA.sendResponse == 0) {
+      //發信
+      const data = {
+        email: "qampusai@gmail.com",
+        subject: QA.question,
+        html: QA.answer,
+      };
+      const result = await axios.post("/email", data);
+      console.log(result);
+      sendResponse = QA.sendResponse + 1;
+    }
+
     const assignCount =
       QA.status == "noAssign"
         ? 1 //重新計算
@@ -227,7 +242,7 @@ export default function useQA() {
         answer: QA.answer,
         qaUpdateTime: serverTimestamp(),
         needAssignTime,
-        lastUpdaterId: "update001", //最後修改的人(要改auth)
+        lastUpdaterId: user.user.uid, //最後修改的人(要改auth)
         office: assignCount > 3 ? "資訊中心" : officeCurrent,
         officeId: assignCount > 3 ? "iFzUP8v4QxfQYVkBkoc7" : select.指派系所,
         assignCount,
@@ -250,7 +265,7 @@ export default function useQA() {
     setLoading(true);
     try {
       await updateDoc(doc(db, "QA", qaID), {
-        lastUpdaterId: "update001",
+        lastUpdaterId: user.user.uid,
         // qaUpdateTime: serverTimestamp(),
         qaDeleteTime: serverTimestamp(),
         status: pathname == "recentDel" ? "totalDel" : "recentDel",
@@ -269,7 +284,7 @@ export default function useQA() {
     setLoading(true);
     try {
       await updateDoc(doc(db, "QA", qaID), {
-        lastUpdaterId: "update001",
+        lastUpdaterId: user.user.uid,
         qaUpdateTime: serverTimestamp(),
         status: pathname == "noAssign" ? "noAssign" : "pending",
         autoDeleteTime: false,

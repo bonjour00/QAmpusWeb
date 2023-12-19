@@ -1,12 +1,12 @@
 "use client";
-import { columns } from "../_component/Table/colums";
+import { delCols as columns } from "../../_component/Table/colums";
 import { useState, useEffect } from "react";
 // import { columns } from "./colums";
-import useQA from "../_hooks/useQA";
+import useQA from "../../_hooks/useQA";
 import { QA } from "@/app/_settings/interface";
-import Table from "../_component/Table/table";
-import DeleteBtn from "../_component/Table/ActionBtn/deleteBtn";
-import RecoverBtn from "../_component/Table/ActionBtn/recoverBtn";
+import Table from "../../_component/Table/table";
+import DeleteBtn from "../../_component/Table/ActionBtn/deleteBtn";
+import RecoverBtn from "../../_component/Table/ActionBtn/recoverBtn";
 
 export default function RecentDel({ props }: any) {
   const [

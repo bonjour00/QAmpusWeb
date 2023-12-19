@@ -1,25 +1,36 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import {googleSignIn} from './authThunk'
+import { googleSignIn, logout, handleAuth, statusSelect } from "./authThunk";
 
 export interface UserState {
+  id?: string;
   email: string;
   url: string;
   name: string;
-  officeId: boolean;
+  officeId: string; //系所單位
+  uid: string;
+  status: string; //pending(一開始) user office(or officePending) admin(assign)
+  applyTime: Date | string;
 }
 
 export interface User {
   user: UserState;
+  error: string | undefined;
+  bad: boolean;
 }
 
-const initialState: User = {
+export const initialState: User = {
   user: {
     email: "",
     url: "",
     name: "",
-    officeId: false, // 預設 false
+    officeId: "",
+    uid: "",
+    status: "",
+    applyTime: "",
   },
+  error: "",
+  bad: false,
 };
 
 export const authSlice = createSlice({
@@ -28,23 +39,52 @@ export const authSlice = createSlice({
   reducers: {
     logoutUser: (state, action) => {
       if (action.payload == null) {
-        state.user = {
-          email: "345345",
-          url: "345",
-          name: "345",
-          officeId: false, //預設false
-        };
+        state.user = initialState.user;
       }
     },
-  },extraReducers: (builder) => {
+  },
+  extraReducers: (builder) => {
     builder
-      .addCase(googleSignIn.fulfilled, (state, action) => {
-        // state.cartItems = action.payload?.cartItems || [];
-       console.log(action.payload) 
+      .addCase(googleSignIn.fulfilled, (state, action: any) => {
+        state.user = action.payload;
+        switch (action.payload.status) {
+          case "office":
+            location.href = "pending";
+            break;
+          case "admin":
+            location.href = "noAssign";
+            break;
+          default:
+            location.href = "message";
+        }
       })
       .addCase(googleSignIn.rejected, (state, action) => {
-        // state.status = "error";
-        // state.error = action.error;
+        state.error = action.error.message;
+        console.log(action.payload);
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.error = action.error.message;
+        console.log(action.payload);
+      })
+      .addCase(handleAuth.fulfilled, (state, action: any) => {
+        console.log(action.payload);
+        state.user = action.payload;
+      })
+      .addCase(handleAuth.rejected, (state, action) => {
+        state.error = action.error.message;
+        console.log(action.payload);
+      })
+      .addCase(statusSelect.fulfilled, (state, action: any) => {
+        state.user = {
+          ...state.user,
+          officeId: action.payload.officeId,
+          status: action.payload.status,
+        };
+        location.href = "message";
+      })
+      .addCase(statusSelect.rejected, (state, action) => {
+        state.error = action.error.message;
+        console.log(action.payload);
       });
   },
 });
