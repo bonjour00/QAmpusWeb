@@ -133,7 +133,7 @@ export default function useQA() {
       }
     };
     fetchQA();
-  }, [updated, db, select.順序, user, pathname]);
+  }, [updated, db, select.順序, user]);
 
   useEffect(() => {
     setQalistFilter(
@@ -163,7 +163,7 @@ export default function useQA() {
     };
 
     fetchQffice();
-  }, [db, pathname]);
+  }, [db]);
 
   const createQA = async (QAadd: QAadd) => {
     const needAssignTime = new Date();

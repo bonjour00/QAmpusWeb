@@ -59,7 +59,7 @@ export default function useAdmin() {
     };
 
     fetchUsers();
-  }, [db, updated, select.順序, pathname]);
+  }, [db, updated, select.順序]);
 
   useEffect(() => {
     setUserlistFilter(
@@ -89,7 +89,7 @@ export default function useAdmin() {
     };
 
     fetchQffice();
-  }, [db, pathname]);
+  }, [db]);
 
   const checkOffice = async (uid: string, status: string) => {
     setLoading(true);
