@@ -133,7 +133,7 @@ export default function useQA() {
       }
     };
     fetchQA();
-  }, [updated, db, select.順序, user]);
+  }, [updated, db, select.順序, user, pathname]);
 
   useEffect(() => {
     setQalistFilter(
@@ -163,7 +163,7 @@ export default function useQA() {
     };
 
     fetchQffice();
-  }, [db]);
+  }, [db, pathname]);
 
   const createQA = async (QAadd: QAadd) => {
     const needAssignTime = new Date();
@@ -202,7 +202,7 @@ export default function useQA() {
     if (QaCanCheck && QA.sendResponse == 0) {
       //發信
       const data = {
-        email: "qampusai@gmail.com",
+        email: user.user.email,
         subject: QA.question,
         html: QA.answer,
       };
