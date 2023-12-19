@@ -13,7 +13,7 @@ export const nothingMenu = [
 ];
 export const userAccess = ["/message", "/testmail"];
 export const officeAccess = ["/pending", "/checked", "/recentDel"];
-export const adminAccess = ["/noAssign"];
+export const adminAccess = ["/noAssign", "/admin"];
 
 export const menuListUser = [
   {
@@ -42,5 +42,10 @@ export const menuListAdmin = [
     title: "待指派問題",
     icon: <ContentPasteSearchOutlinedIcon />,
     url: "/noAssign",
+  },
+  {
+    title: "權限管理",
+    icon: <ContentPasteSearchOutlinedIcon />,
+    url: "/admin",
   },
 ].concat(menuListUser);
