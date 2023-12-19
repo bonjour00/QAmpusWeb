@@ -69,10 +69,10 @@ export default function useQA() {
     }
   };
   useEffect(() => {
-    if (!canFetch.current) {
-      canFetch.current = true;
-      return;
-    }
+    // if (!canFetch.current) {
+    //   canFetch.current = true;
+    //   return;
+    // }
 
     const fetchQA = async () => {
       console.log("fetch");
