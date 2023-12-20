@@ -12,6 +12,7 @@ import {
   orderBy,
   OrderByDirection,
   where,
+  getDoc,
 } from "firebase/firestore";
 import app from "@/app/_firebase/Config";
 import { useEffect, useState, useRef } from "react";
@@ -281,6 +282,13 @@ export default function useQA() {
   };
 
   const recoverQA = async (qaID: string) => {
+    const CollectionRef = doc(db, "QA", qaID);
+    const data = await getDoc(CollectionRef);
+    let needAssignTime = new Date();
+    needAssignTime.setDate(needAssignTime.getDate() + 7);
+    if(data.data().needAssignTime){
+      needAssignTime = data.data().needAssignTime
+    }
     setLoading(true);
     try {
       await updateDoc(doc(db, "QA", qaID), {
@@ -288,6 +296,7 @@ export default function useQA() {
         qaUpdateTime: serverTimestamp(),
         status: pathname == "noAssign" ? "noAssign" : "pending",
         autoDeleteTime: false,
+        needAssignTime
       });
       successs("已復原");
       setUpdated((currentValue) => currentValue + 1);
