@@ -22,6 +22,7 @@ export type QA = {
   status: string; //狀態 e.g 是否審核過
   sendResponse: number; //預設0 當officeId相等確認時為0 代表第一次發
   autoDeleteTime: Date | boolean;
+  creatorEmail?: string;
 };
 
 //office

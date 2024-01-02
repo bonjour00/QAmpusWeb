@@ -186,6 +186,7 @@ export default function useQA() {
         status: "pending", //狀態 e.g 是否審核過
         sendResponse: 0, //預設0 當officeId相等確認時為0 代表第一次發
         autoDeleteTime: false,
+        creatorEmail: user.user.email,
       });
       setUpdated((currentValue) => currentValue + 1);
     } catch (error) {
@@ -202,8 +203,9 @@ export default function useQA() {
     let sendResponse = QA.sendResponse;
     if (QaCanCheck && QA.sendResponse == 0) {
       //發信
+      console.log(QA, "email");
       const data = {
-        email: QA.stuNum,
+        email: QA.creatorEmail,
         subject: QA.question,
         html: QA.answer,
       };
