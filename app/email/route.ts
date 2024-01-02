@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
 <tbody style="width: 100%;">
 <tr style="width: 100%;">
 <td>
-<h1 style="font-size: 32px; font-weight: bold;"><span style="font-size: 18pt; font-family: 'andale mono', monospace;">您好~ 親愛的QAmpus用戶</span></h1>
+<h1 style="font-size: 32px; font-weight: bold;"><span style="font-size: 18pt; font-family: 'andale mono', monospace;">您好~ </span></h1>
 <p><span style="font-family: 'andale mono', monospace;">祝您有個充實美好的一天！</span></p>
 <p>${data.html}</p>
 <p>&nbsp;</p>

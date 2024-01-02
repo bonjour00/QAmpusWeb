@@ -59,7 +59,7 @@ export default function Message() {
   };
   return (
     <>
-      {messageList.map((x, index) => (
+      {/* {messageList.map((x, index) => (
         <div key={index}>
           {x.question}
           <br />
@@ -80,7 +80,57 @@ export default function Message() {
         value={question}
         onKeyUp={keyPress}
         onChange={handleClick}
-      />
+      /> */}
+
+      <div className="flex flex-col items-center justify-center w-screen min-h-screen  text-gray-800 p-10">
+        <div className="flex flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden">
+          <div className="flex flex-col flex-grow h-0 p-4 overflow-auto">
+            {messageList.map((x, index) => (
+              <div key={index}>
+                <div className="flex w-full mt-2 space-x-3 max-w-xs ml-auto justify-end">
+                  <div>
+                    <div className="bg-blue-500 text-white p-3 rounded-l-lg rounded-br-lg">
+                      <p className="text-sm">{x.question}</p>
+                    </div>
+                  </div>
+                  <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
+                </div>
+                <div className="flex w-full mt-2 space-x-3 max-w-xs">
+                  <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
+                  <div>
+                    <div className="bg-gray-300 p-3 rounded-r-lg rounded-bl-lg">
+                      <p className="text-sm">
+                        {x.answer}
+                        <br />
+                        {x.confidenceScore !== 0 && (
+                          <>
+                            {x.confidenceScore}
+                            <br />
+                            {x.questionsOrgin}
+                            <br />
+                            <a href={x.source}>{x.source}</a>
+                          </>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="bg-gray-300 p-4">
+            <input
+              className="flex items-center h-10 w-full rounded px-3 text-sm"
+              type="text"
+              placeholder="Type your message…"
+              value={question}
+              onKeyUp={keyPress}
+              onChange={handleClick}
+            />
+          </div>
+        </div>
+      </div>
     </>
   );
 }
