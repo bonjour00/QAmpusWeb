@@ -286,8 +286,8 @@ export default function useQA() {
     const data = await getDoc(CollectionRef);
     let needAssignTime = new Date();
     needAssignTime.setDate(needAssignTime.getDate() + 7);
-    if(data.data().needAssignTime){
-      needAssignTime = data.data().needAssignTime
+    if (data.data()?.needAssignTime) {
+      needAssignTime = data.data()?.needAssignTime;
     }
     setLoading(true);
     try {
@@ -296,7 +296,7 @@ export default function useQA() {
         qaUpdateTime: serverTimestamp(),
         status: pathname == "noAssign" ? "noAssign" : "pending",
         autoDeleteTime: false,
-        needAssignTime
+        needAssignTime,
       });
       successs("已復原");
       setUpdated((currentValue) => currentValue + 1);
