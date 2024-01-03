@@ -85,7 +85,7 @@ export const handleAuth = createAsyncThunk(
       const usersCollectionRef = doc(db, "users", uid);
       const account = await getDoc(usersCollectionRef);
       if (!account.data()) {
-        await signOut(auth);
+        // await signOut(auth);
         return initialState;
       }
       return { ...account.data(), applyTime: "" };
