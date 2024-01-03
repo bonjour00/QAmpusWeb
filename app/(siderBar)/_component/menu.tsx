@@ -94,7 +94,11 @@ const MiniDrawer = () => {
         </span>
       </div>
       {user?.user?.uid && (
-        <Button variant="contained" onClick={() => dispatch(logout())}>
+        <Button
+          variant="contained"
+          onClick={() => dispatch(logout())}
+          style={{ background: "#79a0bd" }}
+        >
           logout
         </Button>
       )}

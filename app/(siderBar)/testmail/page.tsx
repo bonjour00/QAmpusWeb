@@ -8,6 +8,8 @@ export default function TestEmail() {
     email: "qampusai@gmail.com",
     subject: "",
     html: "",
+    content: "QAmpus團隊~",
+    moreContent: "祝您有個充實美好的一天！",
   });
   const [response, setResponse] = useState("");
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,6 +24,13 @@ export default function TestEmail() {
         data: message,
       });
       setResponse(response.data.message);
+      setMessage({
+        email: "qampusai@gmail.com",
+        subject: "",
+        html: "",
+        content: "QAmpus團隊~",
+        moreContent: "祝您有個充實美好的一天！",
+      });
       console.log(response);
     } catch (error) {
       if (axios.isAxiosError(error)) {

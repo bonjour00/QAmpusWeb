@@ -207,7 +207,9 @@ export default function useQA() {
       const data = {
         email: QA.creatorEmail,
         subject: QA.question,
-        html: QA.answer,
+        html: `Q:${QA.question}<br/>${QA.answer}<br/>`,
+        content: "親愛的QAmpus用戶~",
+        moreContent: "以下為經人工審核確認之答覆<br/>祝您有個充實美好的一天！",
       };
       const result = await axios.post("/email", data);
       console.log(result);

@@ -3,6 +3,7 @@ import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import useQA from "../../_hooks/useQA";
 import axios from "axios";
+import { useAppSelector } from "@/redux/hooks";
 type Message = {
   question: string;
   answer: string;
@@ -13,6 +14,7 @@ type Message = {
 export default function Message() {
   const [question, setQuestion] = useState("");
   const [messageList, setMessageList] = useState<Message[]>([]);
+  const user = useAppSelector((state) => state.auth);
   const [
     QaListFilter,
     createQA,
@@ -93,7 +95,11 @@ export default function Message() {
                       <p className="text-sm">{x.question}</p>
                     </div>
                   </div>
-                  <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
+                  <img
+                    className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"
+                    src={user.user.url}
+                    alt="hi"
+                  />
                 </div>
                 <div className="flex w-full mt-2 space-x-3 max-w-xs">
                   <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
@@ -104,11 +110,11 @@ export default function Message() {
                         <br />
                         {x.confidenceScore !== 0 && (
                           <>
-                            {x.confidenceScore}
+                            信心度: {x.confidenceScore}
                             <br />
-                            {x.questionsOrgin}
+                            原始訓練問句: {x.questionsOrgin}
                             <br />
-                            <a href={x.source}>{x.source}</a>
+                            出處: <a href={x.source}>{x.source}</a>
                           </>
                         )}
                       </p>
@@ -119,11 +125,11 @@ export default function Message() {
             ))}
           </div>
 
-          <div className="bg-gray-300 p-4">
+          <div className="p-4" style={{ background: "#79a0bd" }}>
             <input
               className="flex items-center h-10 w-full rounded px-3 text-sm"
               type="text"
-              placeholder="Type your message…"
+              placeholder="想問甚麼呢?"
               value={question}
               onKeyUp={keyPress}
               onChange={handleClick}
