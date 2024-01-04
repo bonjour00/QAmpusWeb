@@ -51,7 +51,8 @@ export default function useAdmin() {
           id: doc.id,
           ...doc.data(),
         }));
-        setUserlist(list);
+        const listFilter = list.filter((x) => x.status != "pending");
+        setUserlist(listFilter);
         setLoading(false);
       } catch (error) {
         console.log(error);
